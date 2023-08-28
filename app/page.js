@@ -10,10 +10,12 @@ import Carousel from "@/components/ui/Carousel";
 import { useRouter } from "next/navigation";
 import { useArticles } from "@/components/atoms/useArticles";
 import { motion } from "framer-motion";
+import { articlesData } from "@/data";
 
 export default function Home() {
 
-    const articles = useArticles();
+    // const articles = useArticles();
+    const articles = articlesData;
     const [currentPage, setCurentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(12);
 
@@ -30,7 +32,7 @@ export default function Home() {
             <main className="flex min-h-screen flex-col items-center">
                 <Carousel />
                 <div className="grid grid-cols-3 gap-10 mt-[102px]" id="article">
-                    {articles && articles.data.slice(firstPostIndex, lastPostIndex).map((article, index) => (
+                    {articles && articles.slice(firstPostIndex, lastPostIndex).map((article, index) => (
                         <motion.div whileInView={{ y: [50, 0], opacity: [0, 1] }} transition={{ duration: 1 }}>
                             <Card
                                 key={index}
@@ -47,8 +49,8 @@ export default function Home() {
                 <div className="flex justify-center mb-36">
                     <Pagination totalPosts={
                         articles &&
-                            articles.data.length > postPerPage
-                            ? articles.data.length
+                            articles.length > postPerPage
+                            ? articles.length
                             : 0
                     } postPerPage={postPerPage} setCurrentPage={setCurentPage} currentPage={currentPage} />
                 </div>

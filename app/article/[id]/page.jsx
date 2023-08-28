@@ -1,22 +1,29 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import Image from 'next/image';
-import { PersonIcon, ClockIcon } from '@/public/assets/icons/icons';
-import { TextAreaArtikel } from '@/components/forms/TextAreas';
-import Input from '@/components/forms/Input';
-import { KirimKomentarButton } from '@/components/ui/Button';
-import Navbar from '@/components/ui/Navbar';
-import Footer from '@/components/ui/Footer';
-import Link from 'next/link';
-import useSWR, { mutate } from 'swr';
-import { useArticles } from '@/components/atoms/useArticles';
-import { EmailShareButton, FacebookShareButton, TwitterShareButton } from 'react-share';
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { PersonIcon, ClockIcon } from "@/public/assets/icons/icons";
+import { TextAreaArtikel } from "@/components/forms/TextAreas";
+import Input from "@/components/forms/Input";
+import { KirimKomentarButton } from "@/components/ui/Button";
+import Navbar from "@/components/ui/Navbar";
+import Footer from "@/components/ui/Footer";
+import Link from "next/link";
+import useSWR, { mutate } from "swr";
+import { useArticles } from "@/components/atoms/useArticles";
+import {
+   EmailShareButton,
+   FacebookShareButton,
+   TwitterShareButton,
+} from "react-share";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function fetchArticle(id) {
-   const { data: article } = useSWR(`https://capstone-project.duckdns.org:8080/articles/${id}`, fetcher);
+   const { data: article } = useSWR(
+      `https://capstone-project.duckdns.org:8080/articles/${id}`,
+      fetcher
+   );
    return article;
 }
 
@@ -38,7 +45,10 @@ export default function DetailArticle({ params }) {
    const firstNameRef = useRef();
    const lastNameRef = useRef();
    const articles = useArticles();
-   const { data: article, mutate } = useSWR(`https://capstone-project.duckdns.org:8080/articles/${params.id}`, fetcher);
+   const { data: article, mutate } = useSWR(
+      `https://capstone-project.duckdns.org:8080/articles/${params.id}`,
+      fetcher
+   );
 
    const handleSubmit = async (event) => {
       event.preventDefault();
@@ -50,20 +60,23 @@ export default function DetailArticle({ params }) {
       console.log(JSON.stringify(newComment));
 
       try {
-         const response = await fetch(`https://capstone-project.duckdns.org:8080/articles/${params.id}/comment`, {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newComment),
-         });
+         const response = await fetch(
+            `https://capstone-project.duckdns.org:8080/articles/${params.id}/comment`,
+            {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify(newComment),
+            }
+         );
          if (!response.ok) {
-            throw new Error('Error adding article');
+            throw new Error("Error adding article");
          }
          mutate(); // Ini akan melakukan fetch data kembali ke server.
-         commentTextRef.current.value = ''; // Kosongkan input komentar
-         firstNameRef.current.value = ''; // Kosongkan input nama depan
-         lastNameRef.current.value = ''; // Kosongkan input nama belakang
+         commentTextRef.current.value = ""; // Kosongkan input komentar
+         firstNameRef.current.value = ""; // Kosongkan input nama depan
+         lastNameRef.current.value = ""; // Kosongkan input nama belakang
       } catch (error) {
          console.error(error);
       }
@@ -73,7 +86,8 @@ export default function DetailArticle({ params }) {
 
    const url = window.location.href;
    console.log(url);
-   const filteredArticles = articles && articles.data.filter((article) => article.id != params.id);
+   const filteredArticles =
+      articles && articles.data.filter((article) => article.id != params.id);
 
    return (
       <>
@@ -90,26 +104,66 @@ export default function DetailArticle({ params }) {
                      </h1>
                      <div className="flex flex-col gap-[22px] font-inter text-[16px] leading-[18px] font-[400] mt-6">
                         <div className="p-[8px] bg-[#E2F0DC] rounded-[3px] max-w-[202px]">
-                           <p className="font-poppins font-[600] text-[20px] leading-[30px] text-[#7CA153]">{getArticle.data.category}</p>
+                           <p className="font-poppins font-[600] text-[20px] leading-[30px] text-[#7CA153]">
+                              {getArticle.data.category}
+                           </p>
                         </div>
                         <p className="font-poppins font-[400] text-[16px] leading-[24px] italic">
-                           Dibuat Oleh: {getArticle.data.doctor_name} {getArticle.data.date}
+                           Dibuat Oleh: {getArticle.data.doctor_name}{" "}
+                           {getArticle.data.date}
                         </p>
                      </div>
                   </header>
 
-                  <Image priority alt="images" className="w-full mt-[48px]   h-[680px] object-cover " src={getArticle.data.thumbnail} width={1440} height={5} />
+                  <Image
+                     priority
+                     alt="images"
+                     className="w-full mt-[48px]   h-[680px] object-cover "
+                     src={getArticle.data.thumbnail}
+                     width={1440}
+                     height={5}
+                  />
 
                   <main className="max-w-[1220px] mx-auto">
                      <div className="flex gap-[42px] justify-center my-[32px]">
-                        <FacebookShareButton url={url} className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]" style={{ backgroundColor: '#DEDEDE' }}>
-                           <Image priority alt="images" src="/assets/icons/facebook-icon.svg" width={30} height={30} />
+                        <FacebookShareButton
+                           url={url}
+                           className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]"
+                           style={{ backgroundColor: "#DEDEDE" }}
+                        >
+                           <Image
+                              priority
+                              alt="images"
+                              src="/assets/icons/facebook-icon.svg"
+                              width={30}
+                              height={30}
+                           />
                         </FacebookShareButton>
-                        <EmailShareButton url={url} className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]" style={{ backgroundColor: '#DEDEDE' }}>
-                           <Image priority alt="images" src="/assets/icons/google-icon.svg" width={30} height={30} />
+                        <EmailShareButton
+                           url={url}
+                           className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]"
+                           style={{ backgroundColor: "#DEDEDE" }}
+                        >
+                           <Image
+                              priority
+                              alt="images"
+                              src="/assets/icons/google-icon.svg"
+                              width={30}
+                              height={30}
+                           />
                         </EmailShareButton>
-                        <TwitterShareButton url={url} className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]" style={{ backgroundColor: '#DEDEDE' }}>
-                           <Image priority alt="images" src="/assets/icons/twitter-icon.svg" width={30} height={30} />
+                        <TwitterShareButton
+                           url={url}
+                           className="  w-[164px] h-[52px] flex items-center justify-center rounded-[10px]"
+                           style={{ backgroundColor: "#DEDEDE" }}
+                        >
+                           <Image
+                              priority
+                              alt="images"
+                              src="/assets/icons/twitter-icon.svg"
+                              width={30}
+                              height={30}
+                           />
                         </TwitterShareButton>
                      </div>
                      <p
@@ -123,9 +177,14 @@ export default function DetailArticle({ params }) {
                            <div>
                               {filteredArticles.length >= 1 ? (
                                  <>
-                                    {' '}
-                                    <h2 className="w-[500px] text-left">{filteredArticles[0].title}</h2>
-                                    <Link href={`/article/${filteredArticles[0].id}`} className="font-[500] text-[16px] leading-4 text-[#268AFF]  mt-[18px] flex justify-start">
+                                    {" "}
+                                    <h2 className="w-[500px] text-left">
+                                       {filteredArticles[0].title}
+                                    </h2>
+                                    <Link
+                                       href={`/article/${filteredArticles[0].id}`}
+                                       className="font-[500] text-[16px] leading-4 text-[#268AFF]  mt-[18px] flex justify-start"
+                                    >
                                        Post Selanjutnya
                                     </Link>
                                  </>
@@ -134,9 +193,14 @@ export default function DetailArticle({ params }) {
                            <div>
                               {filteredArticles.length >= 2 ? (
                                  <>
-                                    {' '}
-                                    <h2 className="w-[500px] text-right">{filteredArticles[1].title}</h2>
-                                    <Link href={`/article/${filteredArticles[1].id}`} className="font-[500] text-[16px] leading-4 text-[#268AFF]  mt-[18px] flex justify-end">
+                                    {" "}
+                                    <h2 className="w-[500px] text-right">
+                                       {filteredArticles[1].title}
+                                    </h2>
+                                    <Link
+                                       href={`/article/${filteredArticles[1].id}`}
+                                       className="font-[500] text-[16px] leading-4 text-[#268AFF]  mt-[18px] flex justify-end"
+                                    >
                                        Post Selanjutnya
                                     </Link>
                                  </>
@@ -152,15 +216,31 @@ export default function DetailArticle({ params }) {
 
             <section className="max-w-[1220px] mx-auto mt-[70px] mb-[50px]">
                <div>
-                  <h3 className="font-inter font-[600] text-[22px] leading-9">Tinggalkan Balasan</h3>
-                  <p className="font-inter font-[400] text-[20px] leading-8 mt-[26px]">Alamat email Anda tidak akan dipublikasikan. Ruas yang wajib ditandai *</p>
+                  <h3 className="font-inter font-[600] text-[22px] leading-9">
+                     Tinggalkan Balasan
+                  </h3>
+                  <p className="font-inter font-[400] text-[20px] leading-8 mt-[26px]">
+                     Alamat email Anda tidak akan dipublikasikan. Ruas yang
+                     wajib ditandai *
+                  </p>
                </div>
                {getArticle && getArticle.data.comments.length > 0
                   ? getArticle.data.comments.map((item, index) => (
-                       <div key={index} className="flex gap-3 items-start my-[50px]">
-                          <Image priority alt="images" src="/assets/icons/profile2-icon.svg" width={40} height={40} />
+                       <div
+                          key={index}
+                          className="flex gap-3 items-start my-[50px]"
+                       >
+                          <Image
+                             priority
+                             alt="images"
+                             src="/assets/icons/profile2-icon.svg"
+                             width={40}
+                             height={40}
+                          />
                           <div>
-                             <h4 className="font-poppins font-[500] text-[24px] leading-8 text-[#00000096]">{item.full_name}</h4>
+                             <h4 className="font-poppins font-[500] text-[24px] leading-8 text-[#00000096]">
+                                {item.full_name}
+                             </h4>
                              <p>{item.comment}</p>
                           </div>
                        </div>
@@ -193,7 +273,9 @@ export default function DetailArticle({ params }) {
                         required
                      />
                   </div>
-                  <KirimKomentarButton type="submit">Kirim Komentar</KirimKomentarButton>
+                  <KirimKomentarButton type="submit">
+                     Kirim Komentar
+                  </KirimKomentarButton>
                </form>
             </section>
          </article>
