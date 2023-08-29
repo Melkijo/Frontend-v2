@@ -5,17 +5,25 @@ import detailArtikel from "../public/assets/images/detail-article.png";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Pagination } from "@/components/ui/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Carousel from "@/components/ui/Carousel";
 import { useRouter } from "next/navigation";
 import { useArticles } from "@/components/atoms/useArticles";
 import { motion } from "framer-motion";
-import { articlesData } from "@/data";
+// import { articlesData, getStaticProps } from "@/data";
+import prisma from '@/lib/prisma';
 
-export default function Home() {
-
+// const getArticles = async () => {
+//     const articles = await prisma.Article.findMany();
+//     console.log(articles && articles);
+//     return articles;
+// }
+export default async function Home() {
     // const articles = useArticles();
-    const articles = articlesData;
+    // const articles = articlesData;
+
+    const articles = await prisma.Article.findMany();
+
     const [currentPage, setCurentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(12);
 
@@ -31,7 +39,8 @@ export default function Home() {
             <Navbar />
             <main className="flex min-h-screen flex-col items-center">
                 <Carousel />
-                <div className="grid grid-cols-3 gap-10 mt-[102px]" id="article">
+                {/* <div>{getArticles()}</div> */}
+                {/* <div className="grid grid-cols-3 gap-10 mt-[102px]" id="article">
                     {articles && articles.slice(firstPostIndex, lastPostIndex).map((article, index) => (
                         <motion.div whileInView={{ y: [50, 0], opacity: [0, 1] }} transition={{ duration: 1 }}>
                             <Card
@@ -45,15 +54,15 @@ export default function Home() {
                         </motion.div>
 
                     ))}
-                </div>
-                <div className="flex justify-center mb-36">
+                </div> */}
+                {/* <div className="flex justify-center mb-36">
                     <Pagination totalPosts={
                         articles &&
                             articles.length > postPerPage
                             ? articles.length
                             : 0
                     } postPerPage={postPerPage} setCurrentPage={setCurentPage} currentPage={currentPage} />
-                </div>
+                </div> */}
             </main>
             <Footer />
         </>

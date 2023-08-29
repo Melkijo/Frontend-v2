@@ -1,3 +1,4 @@
+
 export const articlesData = [{
     'postId': 1,
     'title': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
@@ -71,3 +72,4 @@ export const articlesData = [{
     'description': 'Lorem ipsum dolor sit amet, consectetur adi',
 }
 ]
+
